@@ -17,6 +17,8 @@ namespace JobTrail.Core.Entities
 
         public DateTime? DateModified { get; set; }
 
+        public ICollection<Address> Addresses { get; set; }
+
         public ICollection<Job> Jobs { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace JobTrail.Data
         }
 
         public DbSet<Job> Jobs { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

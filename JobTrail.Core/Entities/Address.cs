@@ -1,7 +1,5 @@
 ﻿using JobTrail.Core.Entities.Base;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Text.Json.Serialization;
 
 namespace JobTrail.Core.Entities
 {
@@ -17,6 +15,7 @@ namespace JobTrail.Core.Entities
 
         public string PostCode { get; set; }
 
+        [JsonIgnore]
         public User User { get; set; }
     }
 }

@@ -49,16 +49,13 @@ namespace JobTrail.API
                 //Require Authentication by default
                 var policy = new AuthorizationPolicyBuilder()
                  .RequireAuthenticatedUser()
+                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                  .Build();
+
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
 
-            services.AddAuthentication(x =>
-                {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.RequireAuthenticatedSignIn = true;
-                })
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.SaveToken = true;

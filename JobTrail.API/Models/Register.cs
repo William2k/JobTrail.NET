@@ -45,7 +45,7 @@ namespace JobTrail.API.Models
 
         public string PostCode { get; set; }
 
-        public User ToUser()
+        public User GetUser()
         {
             var user = new User
             {
@@ -58,7 +58,7 @@ namespace JobTrail.API.Models
             return user;
         }
 
-        public Address ToAddress()
+        public Address GetAddress()
         {
             var address = new Address
             {

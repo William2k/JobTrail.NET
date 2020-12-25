@@ -1,7 +1,8 @@
-using JobTrail.Core.Entities;
 using JobTrail.Core.Services;
 using JobTrail.Core.Services.Interfaces;
 using JobTrail.Data;
+using JobTrail.Data.Entities;
+using JobTrail.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -40,7 +41,7 @@ namespace JobTrail.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "JobTrail.API", Version = "v1" });
             });
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<JTContext>()
                 .AddDefaultTokenProviders();
 
@@ -70,7 +71,13 @@ namespace JobTrail.API
                     };
                 });
 
-            services.AddScoped<IJobService, JobService>();
+            //services
+            //    .AddScoped<IGenericRepository<Job>, GenericRepository<Job>>();
+
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            services
+                .AddScoped<IJobService, JobService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

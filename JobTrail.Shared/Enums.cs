@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace JobTrail.Core
+namespace JobTrail.Shared
 {
     public enum Priority
     {

@@ -1,9 +1,11 @@
 ﻿using JobTrail.API.Controllers.Base;
 using JobTrail.API.Models;
-using JobTrail.Core.Entities;
+using JobTrail.Core.Services.Interfaces;
 using JobTrail.Data;
+using JobTrail.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,22 +14,21 @@ namespace JobTrail.API.Controllers
     public class JobController : BaseController
     {
         private readonly UserManager<User> _userManager;
-        private readonly JTContext _context;
 
-        public JobController(UserManager<User> userManager, JTContext context)
+        private readonly IJobService _jobService;
+
+        public JobController(UserManager<User> userManager, IJobService jobService)
         {
             _userManager = userManager;
-            _context = context;
+            _jobService = jobService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetJobs()
+        public IActionResult GetJobs(Guid? groupId, DateTime? from, DateTime? to)
         {
-            var currentUser = await _userManager.FindByIdAsync(CurrentUserId.ToString());
+            var filteredJobs = _jobService.GetJobs(userId: CurrentUserId, groupId: groupId, from: from, to: to);
 
-            await _context.Entry(currentUser).Collection(x => x.Jobs).LoadAsync();
-
-            return Ok(currentUser.Jobs);
+            return Ok(filteredJobs);
         }
 
         [HttpPost]
@@ -39,13 +40,7 @@ namespace JobTrail.API.Controllers
             }
 
             var job = addJob.GetJob();
-
-            job.ParentJob = _context.Jobs.FirstOrDefault(m => m.Id == addJob.ParentJobId);
-            job.AssignedUser = await _userManager.FindByIdAsync(addJob.AssignedUserId.ToString());
-
-            _context.Jobs.Add(job);
-
-            await _context.SaveChangesAsync();
+            await _jobService.AddJob(job);
 
             return CreatedAtAction(nameof(AddJob), job);
         }

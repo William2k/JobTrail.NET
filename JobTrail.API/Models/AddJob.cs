@@ -1,10 +1,7 @@
-﻿using JobTrail.Core;
-using JobTrail.Core.Entities;
+﻿using JobTrail.Data.Entities;
+using JobTrail.Shared;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace JobTrail.API.Models
 {
@@ -26,12 +23,19 @@ namespace JobTrail.API.Models
 
         public Job GetJob()
         {
+            if(!AssignedUserId.HasValue)
+            {
+                throw new Exception("AssignedUserId must have a value");
+            }
+
             var job = new Job
             {
                 Name = Name,
                 Description = Description,
                 Priority = Priority,
-                DueDate = DueDate
+                DueDate = DueDate,
+                AssignedUserId = AssignedUserId.Value,
+                ParentJobId = ParentJobId
             };
 
             return job;

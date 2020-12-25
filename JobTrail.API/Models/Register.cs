@@ -1,4 +1,4 @@
-﻿using JobTrail.Core.Entities;
+﻿using JobTrail.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

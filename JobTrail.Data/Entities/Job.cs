@@ -1,9 +1,11 @@
-﻿using JobTrail.Core.Entities.Base;
+﻿using JobTrail.Data.Entities.Base;
+using JobTrail.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace JobTrail.Core.Entities
+namespace JobTrail.Data.Entities
 {
     public class Job : BaseEntity
     {
@@ -15,11 +17,24 @@ namespace JobTrail.Core.Entities
 
         public DateTime? DueDate { get; set; }
 
+        [ForeignKey(nameof(ParentJob))]
+        public Guid? ParentJobId { get; set; }
+
+        [ForeignKey(nameof(AssignedUser))]
+        public Guid AssignedUserId { get; set; }
+
+        [ForeignKey(nameof(Group))]
+        public Guid GroupId { get; set; }
+
+
         [JsonIgnore]
         public User AssignedUser { get; set; }
 
         [JsonIgnore]
         public Job ParentJob { get; set; }
+
+        [JsonIgnore]
+        public Group Group { get; set; }
 
         [JsonIgnore]
         public ICollection<Job> ChildJobs { get; set; }

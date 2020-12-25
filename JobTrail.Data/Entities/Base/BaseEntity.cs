@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace JobTrail.Core.Entities.Base
+namespace JobTrail.Data.Entities.Base
 {
     public abstract class BaseEntity
     {

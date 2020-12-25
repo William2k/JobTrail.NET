@@ -1,11 +1,12 @@
-﻿using JobTrail.Core.Entities;
+﻿using JobTrail.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace JobTrail.Data
 {
-    public class JTContext : IdentityDbContext<User>
+    public class JTContext : IdentityDbContext<User, Role, Guid>
     {
         public JTContext(DbContextOptions<JTContext> options) : base(options)
         {
@@ -13,26 +14,36 @@ namespace JobTrail.Data
 
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<User>()
-                .ToTable("Users")
-                .Property(x => x.DateCreated)
-                .HasDefaultValueSql("GETDATE()");
+            builder.Entity<User>(b => 
+            {
+                b.ToTable("Users");
+                b.Property(x => x.DateCreated).HasDefaultValueSql("GETDATE()");
+                b.Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            });
 
-            builder.Entity<IdentityRole>().ToTable("Roles");
-            builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
-            builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
-            builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
-            builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
-            builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+            builder.Entity<Role>(b =>
+            {
+                b.ToTable("Roles");
+                b.Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            });
 
-            builder.Entity<Job>()
-                .Property(x => x.DateCreated)
-                .HasDefaultValueSql("GETDATE()");
+            builder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
+            builder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
+            builder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
+            builder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
+            builder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
+
+            builder.Entity<Job>(b => 
+            {
+                b.Property(x => x.DateCreated).HasDefaultValueSql("GETDATE()");
+            });
         }
     }
 }

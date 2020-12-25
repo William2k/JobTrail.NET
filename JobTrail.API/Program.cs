@@ -1,12 +1,9 @@
-using JobTrail.Core;
-using JobTrail.Core.Entities;
 using JobTrail.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Threading.Tasks;
 
 namespace JobTrail.API
 {

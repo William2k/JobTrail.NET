@@ -1,6 +1,6 @@
 ﻿using JobTrail.API.Controllers.Base;
 using JobTrail.API.Models;
-using JobTrail.Core.Entities;
+using JobTrail.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -86,7 +86,7 @@ namespace JobTrail.API.Controllers
             var claims = new[] 
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Sid, user.Id)
+                new Claim(ClaimTypes.Sid, user.Id.ToString())
             };
 
             var token = new JwtSecurityToken(issuer,

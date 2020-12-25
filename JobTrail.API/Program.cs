@@ -12,16 +12,16 @@ namespace JobTrail.API
 {
     public class Program
     {
-        public async static Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
 
-            await CreateDbIfNotExists(host);
+            CreateDbIfNotExists(host);
 
             host.Run();
         }
 
-        private async static Task CreateDbIfNotExists(IHost host)
+        private static void CreateDbIfNotExists(IHost host)
         {
             using var scope = host.Services.CreateScope();
 
@@ -31,14 +31,6 @@ namespace JobTrail.API
             {
                 var context = services.GetRequiredService<JTContext>();
                 context.Database.EnsureCreated();
-
-                var user = new User { FirstName = "Test", LastName = "Test", Email = "Test@email.com", PhoneNumber = "01234567892" };
-                var job = new Job { AssignedUser = user, Name = "TestJob", Priority = Priority.Medium };
-
-                await context.Users.AddAsync(user);
-                await context.Jobs.AddAsync(job);
-
-                await context.SaveChangesAsync();
             }
             catch (Exception ex)
             {

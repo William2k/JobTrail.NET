@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,7 +70,7 @@ namespace JobTrail.API.Controllers
 
             if (!result.Succeeded)
             {
-                return BadRequest();
+                return BadRequest(new { Errors = result.Errors.Select(x => x.Description)});
             }
 
             return CreatedAtAction(nameof(Register), user);

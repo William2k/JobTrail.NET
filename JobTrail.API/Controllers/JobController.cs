@@ -23,7 +23,7 @@ namespace JobTrail.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetJobs()
         {
-            var currentUser = _context.Users.Single(x => x.Id == CurrentUserId.ToString());
+            var currentUser = await _userManager.FindByIdAsync(CurrentUserId.ToString());
 
             await _context.Entry(currentUser).Collection(x => x.Jobs).LoadAsync();
 

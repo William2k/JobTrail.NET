@@ -1,6 +1,7 @@
 ﻿using JobTrail.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace JobTrail.Data
         public virtual IQueryable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "")
+            IEnumerable<string> includeProperties = null)
         {
             IQueryable<TEntity> query = dbSet;
 
@@ -30,10 +31,12 @@ namespace JobTrail.Data
                 query = query.Where(filter);
             }
 
-            foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            if(includeProperties != null)
             {
-                query = query.Include(includeProperty);
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
             }
 
             if (orderBy != null)
@@ -51,30 +54,45 @@ namespace JobTrail.Data
             return await dbSet.FindAsync(id);
         }
 
-        public async virtual Task Insert(TEntity entity)
+        public async virtual Task Insert(TEntity entity, bool saveToDb = true)
         {
             await dbSet.AddAsync(entity);
+
+            if (saveToDb)
+            {
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public async virtual Task Delete(Guid id)
+        public async virtual Task Delete(Guid id, bool saveToDb = true)
         {
             TEntity entityToDelete = await dbSet.FindAsync(id);
-            Delete(entityToDelete);
+            await Delete(entityToDelete, saveToDb);
         }
 
-        public virtual void Delete(TEntity entityToDelete)
+        public async virtual Task Delete(TEntity entityToDelete, bool saveToDb = true)
         {
             if (_context.Entry(entityToDelete).State == EntityState.Detached)
             {
                 dbSet.Attach(entityToDelete);
             }
             dbSet.Remove(entityToDelete);
+
+            if (saveToDb)
+            {
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public virtual void Update(TEntity entityToUpdate)
+        public async virtual Task Update(TEntity entityToUpdate, bool saveToDb = true)
         {
             dbSet.Attach(entityToUpdate);
             _context.Entry(entityToUpdate).State = EntityState.Modified;
+
+            if(saveToDb)
+            {
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

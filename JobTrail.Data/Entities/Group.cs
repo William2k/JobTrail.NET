@@ -15,6 +15,8 @@ namespace JobTrail.Data.Entities
 
         public string Description { get; set; }
 
+        public ICollection<Role> GroupRoles { get; set; }
+
         [ForeignKey(nameof(ParentGroup))]
         public Guid? ParentGroupId { get; set; }
 
@@ -26,5 +28,8 @@ namespace JobTrail.Data.Entities
 
         [JsonIgnore]
         public ICollection<Job> Jobs { get; set; }
+
+        [JsonIgnore]
+        public ICollection<User> Users { get; set; }
     }
 }

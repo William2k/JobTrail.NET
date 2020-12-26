@@ -17,6 +17,9 @@ namespace JobTrail.API.Models
 
         public DateTime? DueDate { get; set; }
 
+        [Required]
+        public Guid GroupId { get; set; }
+
         public Guid? AssignedUserId { get; set; }
 
         public Guid? ParentJobId { get; set; }
@@ -34,6 +37,7 @@ namespace JobTrail.API.Models
                 Description = Description,
                 Priority = Priority,
                 DueDate = DueDate,
+                GroupId = GroupId,
                 AssignedUserId = AssignedUserId.Value,
                 ParentJobId = ParentJobId
             };

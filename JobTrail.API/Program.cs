@@ -1,24 +1,28 @@
 using JobTrail.Data;
+using JobTrail.Data.Entities;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace JobTrail.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public async static Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
 
-            CreateDbIfNotExists(host);
+            await CreateDbIfNotExists(host);
 
             host.Run();
         }
 
-        private static void CreateDbIfNotExists(IHost host)
+        private async static Task CreateDbIfNotExists(IHost host)
         {
             using var scope = host.Services.CreateScope();
 
@@ -27,12 +31,32 @@ namespace JobTrail.API
             try
             {
                 var context = services.GetRequiredService<JTContext>();
-                context.Database.EnsureCreated();
+                
+
+                var dbExisted = !context.Database.EnsureCreated();
+
+                if (!dbExisted)
+                {
+                    await DbInitialiser(services);
+                }
             }
             catch (Exception ex)
             {
                 var logger = services.GetRequiredService<ILogger<Program>>();
                 logger.LogError(ex, "An error occurred creating the DB.");
+            }
+        }
+
+        private async static Task DbInitialiser(IServiceProvider services)
+        {
+            var roleManager = services.GetRequiredService<RoleManager<Role>>();
+
+            var roles = new string[] { "Administrator", "Manager", "User" };
+
+            foreach (var item in roles)
+            {
+                var role = new Role(item);
+                await roleManager.CreateAsync(role);
             }
         }
 

@@ -49,7 +49,22 @@ namespace JobTrail.Data
             }
         }
 
-        public async virtual Task<TEntity> GetByID(Guid id)
+        public async virtual Task<TEntity> GetSingle(Expression<Func<TEntity, bool>> filter, IEnumerable<string> includeProperties = null)
+        {
+            IQueryable<TEntity> query = dbSet;
+
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            return await query.SingleAsync(filter);
+        }
+
+        public async virtual Task<TEntity> GetById(Guid id)
         {
             return await dbSet.FindAsync(id);
         }

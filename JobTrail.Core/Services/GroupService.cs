@@ -29,7 +29,6 @@ namespace JobTrail.Core.Services
         {
             var groups = _userGroupsRepository
                 .Get(x => x.UserId == userId)
-                .Include(x => x.Group)
                 .Select(x => x.Group);
 
             return groups;
@@ -49,6 +48,34 @@ namespace JobTrail.Core.Services
             };
 
             await _userGroupsRepository.Insert(userGroup);
+        }
+
+        public async Task<bool> AddUserToGroup(Guid groupId, Guid userId, string roleName, Guid currentUserId)
+        {
+            var currentUserGroup = await _userGroupsRepository
+                .GetSingle(x => x.GroupId == groupId && x.UserId == currentUserId, includeProperties: new string[] { nameof(UserGroupRoles.Role), nameof(UserGroupRoles.Group) });
+
+            var group = currentUserGroup.Group;
+            var currentUserGroupRole = currentUserGroup.Role;
+
+            if (currentUserGroupRole.Name != Constants.AdministratorRole && currentUserGroupRole.Name != Constants.ManagerRole || 
+                (roleName.ToUpper() == Constants.AdministratorRole.ToUpper() && currentUserGroupRole.Name != Constants.AdministratorRole))
+            {
+                return false;
+            }
+
+            var role = await _roleManager.FindByNameAsync(roleName);
+
+            var userGroup = new UserGroupRoles
+            {
+                Group = group,
+                UserId = userId,
+                Role = role
+            };
+
+            await _userGroupsRepository.Insert(userGroup);
+
+            return true;
         }
     }
 }

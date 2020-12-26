@@ -35,5 +35,18 @@ namespace JobTrail.API.Controllers
 
             return CreatedAtAction(nameof(AddGroup), group);
         }
+
+        [HttpPost("{groupId}/User")]
+        public async Task<IActionResult> AddUserToGroup(Guid groupId, Guid userId, string roleName)
+        {
+            var result = await _groupService.AddUserToGroup(groupId, userId, roleName, CurrentUserId);
+
+            if(!result)
+            {
+                return BadRequest();
+            }
+
+            return CreatedAtAction(nameof(AddUserToGroup), result);
+        }
     }
 }

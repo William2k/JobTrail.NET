@@ -31,6 +31,9 @@ namespace JobTrail.Data.Entities
         public User AssignedUser { get; set; }
 
         [JsonIgnore]
+        public Client Client { get; set; }
+
+        [JsonIgnore]
         public Job ParentJob { get; set; }
 
         [JsonIgnore]

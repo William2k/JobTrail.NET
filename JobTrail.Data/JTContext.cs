@@ -17,6 +17,7 @@ namespace JobTrail.Data
         public DbSet<Group> Groups { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<UserGroupRoles> UserGroupRoles { get; set; }
+        public DbSet<Client> Clients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

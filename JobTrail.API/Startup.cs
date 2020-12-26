@@ -71,13 +71,11 @@ namespace JobTrail.API
                     };
                 });
 
-            //services
-            //    .AddScoped<IGenericRepository<Job>, GenericRepository<Job>>();
-
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             services
-                .AddScoped<IJobService, JobService>();
+                .AddScoped<IJobService, JobService>()
+                .AddScoped<IGroupService, GroupService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

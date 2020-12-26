@@ -60,7 +60,7 @@ namespace JobTrail.Data
 
             if (saveToDb)
             {
-                await _context.SaveChangesAsync();
+                await SaveDbChanges();
             }
         }
 
@@ -80,7 +80,7 @@ namespace JobTrail.Data
 
             if (saveToDb)
             {
-                await _context.SaveChangesAsync();
+                await SaveDbChanges();
             }
         }
 
@@ -91,8 +91,13 @@ namespace JobTrail.Data
 
             if(saveToDb)
             {
-                await _context.SaveChangesAsync();
+                await SaveDbChanges();
             }
+        }
+
+        public async virtual Task SaveDbChanges()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

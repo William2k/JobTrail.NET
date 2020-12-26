@@ -13,6 +13,7 @@ namespace JobTrail.Data.Interfaces
         IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, IEnumerable<string> includeProperties = null);
         Task<TEntity> GetByID(Guid id);
         Task Insert(TEntity entity, bool saveToDb = true);
+        Task SaveDbChanges();
         Task Update(TEntity entityToUpdate, bool saveToDb = true);
     }
 }

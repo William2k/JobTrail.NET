@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\JobTrail.Core\JobTrail.Core.csproj" />
     <ProjectReference Include="..\JobTrail.Data\JobTrail.Data.csproj" />
+    <ProjectReference Include="..\JobTrail.Shared\JobTrail.Shared.csproj" />
   </ItemGroup>
 
 </Project>

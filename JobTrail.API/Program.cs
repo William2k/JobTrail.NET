@@ -1,5 +1,6 @@
 using JobTrail.Data;
 using JobTrail.Data.Entities;
+using JobTrail.Shared;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,7 +52,7 @@ namespace JobTrail.API
         {
             var roleManager = services.GetRequiredService<RoleManager<Role>>();
 
-            var roles = new string[] { "Administrator", "Manager", "User" };
+            var roles = new string[] { Constants.AdministratorRole, Constants.ManagerRole, Constants.UserRole };
 
             foreach (var item in roles)
             {
